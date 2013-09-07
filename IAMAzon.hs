@@ -3,6 +3,8 @@ where
     import Data.List
     import Data.Maybe
 
+    data LetterType = SmallAndHeavy | SmallAndLight | LargeAndLight | LargeAndHeavy deriving (Show, Eq)
+
     data Dimensions = Lengths {small :: Double, middle :: Double, large :: Double} deriving (Show, Eq)
 
     data AmazonCategory  = Media | NonMedia deriving (Show, Eq)
@@ -43,3 +45,24 @@ where
 
     isOverweight :: Double -> AmazonItem -> Bool
     isOverweight weightLimit item = weight item < weightLimit
+
+    letterType :: Double -> Double -> Double -> Double -> Double -> Double -> AmazonItem -> LetterType
+    letterType smallLetterWeight largeLetterWeight smallBoxWeight 
+        maxLetterLength maxLetterWidth maxLetterHeight 
+        item 
+        | any (\x -> x) [itemWeight > largeLetterWeight, 
+            largeLength > maxLetterLength, 
+            middleLength > maxLetterWidth,
+            smallLength > maxLetterHeight] = 
+                if itemWeight > smallBoxWeight then 
+                    LargeAndHeavy 
+                else
+                    LargeAndLight
+        | itemWeight < smallLetterWeight = SmallAndLight
+        | otherwise = SmallAndHeavy
+            where
+                dimensions = dimension item
+                largeLength = large dimensions
+                middleLength = middle dimensions
+                smallLength = small dimensions
+                itemWeight = weight item
