@@ -29,3 +29,15 @@ where
                 middle = sorted !! 1
                 large = sorted !! 2
                 sorted = sort xs
+
+    isOversized :: Double -> Double -> Double -> AmazonItem -> Bool
+    isOversized lengthLimit widthLimit heightLimit item 
+        | lengthLimit >= largeLength && 
+          widthLimit >= middleLength &&
+          heightLimit >= smallLength = True  
+        | otherwise = False
+            where
+                dimensions = dimension item
+                largeLength = large dimensions
+                middleLength = middle dimensions
+                smallLength = small dimensions
